@@ -35,3 +35,4 @@ ralkage-account-lockout:
     log_in:
       locked_timed: "This account has been locked due to too many failed login attempts. Please try again in {minutes} minute(s)."
       locked_manual: This account has been locked. Please contact an administrator.
+      attempts_remaining: "Invalid credentials. {remaining} of {max} login attempt(s) remaining before your account is locked."

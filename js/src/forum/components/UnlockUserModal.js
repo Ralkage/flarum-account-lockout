@@ -1,7 +1,6 @@
 import app from 'flarum/forum/app';
 import Modal from 'flarum/components/Modal';
 import Button from 'flarum/components/Button';
-import humanTime from 'flarum/helpers/humanTime';
 import fullTime from 'flarum/helpers/fullTime';
 
 export default class UnlockUserModal extends Modal {

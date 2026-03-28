@@ -15,6 +15,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ralkage\AccountLockout\Event\AccountLocked;
 use Ralkage\AccountLockout\Exception\AccountLockedException;
+use Ralkage\AccountLockout\Exception\NotAuthenticatedWithAttemptsException;
 
 class CheckAccountLockout implements MiddlewareInterface
 {
@@ -66,7 +67,17 @@ class CheckAccountLockout implements MiddlewareInterface
             $response = $handler->handle($request);
         } catch (NotAuthenticatedException $e) {
             $this->recordFailedAttempt($user);
-            throw $e;
+
+            // If the account just got locked, throw the lockout exception immediately
+            if ($user->is_locked) {
+                $this->checkAndHandleLock($user);
+            }
+
+            // Otherwise, throw with remaining attempts info
+            $maxAttempts = (int) $this->settings->get('ralkage-account-lockout.max_attempts', 5);
+            $remaining = max(0, $maxAttempts - $user->login_failed_count);
+
+            throw new NotAuthenticatedWithAttemptsException($remaining, $maxAttempts);
         }
 
         return $response;
