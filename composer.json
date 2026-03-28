@@ -1,0 +1,41 @@
+{
+    "name": "ralkage/flarum-account-lockout",
+    "description": "Lock user accounts after too many failed login attempts.",
+    "keywords": [
+        "flarum",
+        "security",
+        "lockout",
+        "brute-force",
+        "login"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "php": "^8.0",
+        "flarum/core": "^1.8"
+    },
+    "authors": [
+        {
+            "name": "Ralkage",
+            "email": "me@ralkage.com",
+            "homepage": "https://ralkage.com"
+        }
+    ],
+    "homepage": "https://ralkage.com",
+    "autoload": {
+        "psr-4": {
+            "Ralkage\\AccountLockout\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Account Lockout",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-lock",
+                "backgroundColor": "#e74c3c",
+                "color": "#fff"
+            }
+        }
+    }
+}
