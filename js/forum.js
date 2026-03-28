@@ -38,11 +38,14 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
     }
   });
 
-  // Handle 423 (Account Locked) error on login
+  // Handle login errors with lockout context
   extend('flarum/forum/components/LogInModal', 'onerror', function (returnValue, error) {
+    const errors = error.response && error.response.errors;
+    const firstError = errors && errors[0];
+    let changed = false;
+
     if (error.status === 423) {
-      const errors = error.response && error.response.errors;
-      const retryAfter = errors && errors[0] && errors[0].retry_after;
+      const retryAfter = firstError && firstError.retry_after;
 
       if (retryAfter) {
         error.alert.content = app.translator.trans('ralkage-account-lockout.forum.log_in.locked_timed', {
@@ -51,6 +54,23 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
       } else {
         error.alert.content = app.translator.trans('ralkage-account-lockout.forum.log_in.locked_manual');
       }
+      changed = true;
+    }
+
+    // Show remaining attempts on failed login (401)
+    if (error.status === 401 && firstError && typeof firstError.remaining_attempts !== 'undefined') {
+      const remaining = firstError.remaining_attempts;
+      const max = firstError.max_attempts;
+
+      error.alert.content = app.translator.trans('ralkage-account-lockout.forum.log_in.attempts_remaining', {
+        remaining,
+        max,
+      });
+      changed = true;
+    }
+
+    if (changed) {
+      m.redraw();
     }
   });
 });

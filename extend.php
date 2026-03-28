@@ -13,6 +13,8 @@ use Flarum\User\User;
 use Ralkage\AccountLockout\Access\UserPolicy;
 use Ralkage\AccountLockout\Exception\AccountLockedHandler;
 use Ralkage\AccountLockout\Exception\AccountLockedException;
+use Ralkage\AccountLockout\Exception\NotAuthenticatedWithAttemptsException;
+use Ralkage\AccountLockout\Exception\NotAuthenticatedWithAttemptsHandler;
 use Ralkage\AccountLockout\Listener\ResetFailedAttemptsOnLogin;
 use Ralkage\AccountLockout\Listener\SaveLockoutToDatabase;
 use Ralkage\AccountLockout\Listener\UnlockOnPasswordReset;
@@ -79,5 +81,6 @@ return [
 
     (new Extend\ErrorHandling())
         ->status('account_locked', 423)
-        ->handler(AccountLockedException::class, AccountLockedHandler::class),
+        ->handler(AccountLockedException::class, AccountLockedHandler::class)
+        ->handler(NotAuthenticatedWithAttemptsException::class, NotAuthenticatedWithAttemptsHandler::class),
 ];
