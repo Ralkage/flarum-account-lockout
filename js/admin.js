@@ -7,7 +7,7 @@ import icon from 'flarum/common/helpers/icon';
 import extractText from 'flarum/common/utils/extractText';
 import UserListPage from 'flarum/admin/components/UserListPage';
 
-app.initializers.add('ralkage/flarum-account-lockout', () => {
+app.initializers.add('ralkage/flarum-ext-account-lockout', () => {
   User.prototype.isLocked = Model.attribute('isLocked');
   User.prototype.lockedUntil = Model.attribute('lockedUntil', Model.transformDate);
   User.prototype.lockedAt = Model.attribute('lockedAt', Model.transformDate);

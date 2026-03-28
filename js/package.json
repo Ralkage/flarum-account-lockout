@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "@ralkage/flarum-account-lockout",
+    "name": "@ralkage/flarum-ext-account-lockout",
     "devDependencies": {
         "flarum-webpack-config": "^2.0.2",
         "webpack": "^5.91.0",

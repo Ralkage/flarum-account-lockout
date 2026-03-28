@@ -9,7 +9,7 @@ import LogInModal from 'flarum/components/LogInModal';
 
 import UnlockUserModal from './src/forum/components/UnlockUserModal';
 
-app.initializers.add('ralkage/flarum-account-lockout', () => {
+app.initializers.add('ralkage/flarum-ext-account-lockout', () => {
   User.prototype.isLocked = Model.attribute('isLocked');
   User.prototype.lockedUntil = Model.attribute('lockedUntil', Model.transformDate);
   User.prototype.lockedAt = Model.attribute('lockedAt', Model.transformDate);
