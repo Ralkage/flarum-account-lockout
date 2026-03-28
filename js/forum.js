@@ -1,11 +1,9 @@
-import { extend } from 'flarum/extend';
-import app from 'flarum/app';
-import UserControls from 'flarum/utils/UserControls';
-import Button from 'flarum/components/Button';
-import Badge from 'flarum/components/Badge';
-import User from 'flarum/models/User';
-import Model from 'flarum/Model';
-import LogInModal from 'flarum/components/LogInModal';
+import { extend } from 'flarum/common/extend';
+import app from 'flarum/forum/app';
+import Button from 'flarum/common/components/Button';
+import Badge from 'flarum/common/components/Badge';
+import User from 'flarum/common/models/User';
+import Model from 'flarum/common/Model';
 
 import UnlockUserModal from './src/forum/components/UnlockUserModal';
 
@@ -16,8 +14,8 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
   User.prototype.loginFailedCount = Model.attribute('loginFailedCount');
   User.prototype.canUnlock = Model.attribute('canUnlock');
 
-  // Add "Unlock" button to user moderation controls
-  extend(UserControls, 'moderationControls', (items, user) => {
+  // Add unlock button to user moderation controls
+  extend('flarum/forum/utils/UserControls', 'moderationControls', (items, user) => {
     if (user.canUnlock() && user.isLocked()) {
       items.add(
         'unlock',
@@ -28,7 +26,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
     }
   });
 
-  // Add "Locked" badge to locked users
+  // Add locked badge to user profiles
   extend(User.prototype, 'badges', function (items) {
     if (this.isLocked()) {
       items.add(
@@ -40,7 +38,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
   });
 
   // Handle 423 (Account Locked) error on login
-  extend(LogInModal.prototype, 'onerror', function (returnValue, error) {
+  extend('flarum/forum/components/LogInModal', 'onerror', function (returnValue, error) {
     if (error.status === 423) {
       const errors = error.response && error.response.errors;
       const retryAfter = errors && errors[0] && errors[0].retry_after;

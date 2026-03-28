@@ -5,7 +5,6 @@ import Model from 'flarum/common/Model';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import extractText from 'flarum/common/utils/extractText';
-import UserListPage from 'flarum/admin/components/UserListPage';
 
 app.initializers.add('ralkage/flarum-account-lockout', () => {
   User.prototype.isLocked = Model.attribute('isLocked');
@@ -14,7 +13,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
   User.prototype.loginFailedCount = Model.attribute('loginFailedCount');
   User.prototype.canUnlock = Model.attribute('canUnlock');
 
-  app.extensionData
+  app.registry
     .for('ralkage-account-lockout')
     .registerSetting({
       setting: 'ralkage-account-lockout.max_attempts',
@@ -59,7 +58,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
     );
 
   // Add lock status column to admin user list
-  extend(UserListPage.prototype, 'columns', function (columns) {
+  extend('flarum/admin/components/UserListPage', 'columns', function (columns) {
     columns.add(
       'lockStatus',
       {
@@ -77,7 +76,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
   });
 
   // Add unlock action to admin user list
-  extend(UserListPage.prototype, 'userActionItems', function (items, user) {
+  extend('flarum/admin/components/UserListPage', 'userActionItems', function (items, user) {
     if (user.canUnlock() && user.isLocked()) {
       items.add(
         'unlockUser',

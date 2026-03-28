@@ -2,7 +2,9 @@
 
 namespace Ralkage\AccountLockout;
 
-use Flarum\Api\Serializer\UserSerializer;
+use Flarum\Api\Context;
+use Flarum\Api\Resource\UserResource;
+use Flarum\Api\Schema;
 use Flarum\Extend;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\Event\PasswordChanged;
@@ -33,8 +35,32 @@ return [
         ->cast('locked_at', 'datetime')
         ->cast('login_failed_count', 'integer'),
 
-    (new Extend\ApiSerializer(UserSerializer::class))
-        ->attributes(AddUserLockoutAttributes::class),
+    (new Extend\ApiResource(UserResource::class))
+        ->fields(fn () => [
+            Schema\Boolean::make('isLocked')
+                ->get(fn (User $user) => (bool) $user->is_locked)
+                ->set(function (User $user, bool $value, Context $context) {
+                    if (!$value) {
+                        $context->getActor()->assertCan('unlock', $user);
+                        $user->is_locked = false;
+                        $user->locked_until = null;
+                        $user->locked_at = null;
+                        $user->login_failed_count = 0;
+                    }
+                })
+                ->visible(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
+            Schema\DateTime::make('lockedUntil')
+                ->get(fn (User $user) => $user->locked_until)
+                ->visible(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
+            Schema\DateTime::make('lockedAt')
+                ->get(fn (User $user) => $user->locked_at)
+                ->visible(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
+            Schema\Integer::make('loginFailedCount')
+                ->get(fn (User $user) => (int) $user->login_failed_count)
+                ->visible(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
+            Schema\Boolean::make('canUnlock')
+                ->get(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
+        ]),
 
     (new Extend\Settings())
         ->default('ralkage-account-lockout.max_attempts', 5)
@@ -45,7 +71,6 @@ return [
         ->add(CheckAccountLockout::class),
 
     (new Extend\Event())
-        ->listen(Saving::class, SaveLockoutToDatabase::class)
         ->listen(LoggedIn::class, ResetFailedAttemptsOnLogin::class)
         ->listen(PasswordChanged::class, UnlockOnPasswordReset::class),
 

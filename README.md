@@ -15,8 +15,8 @@ Protect your [Flarum](https://flarum.org) forum against brute-force login attack
 
 ## Requirements
 
-- Flarum `^1.8`
-- PHP `^8.0`
+- Flarum `^2.0`
+- PHP `^8.1`
 
 ## Links
 
