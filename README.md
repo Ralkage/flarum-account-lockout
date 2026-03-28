@@ -21,13 +21,13 @@ Protect your [Flarum](https://flarum.org) forum against brute-force login attack
 ## Links
 
 - [Ralkage](https://ralkage.com)
-- [GitHub](https://github.com/Ralkage/flarum-account-lockout)
-- [Packagist](https://packagist.org/packages/ralkage/flarum-account-lockout)
+- [GitHub](https://github.com/Ralkage/flarum-ext-account-lockout)
+- [Packagist](https://packagist.org/packages/ralkage/flarum-ext-account-lockout)
 
 ## Installation
 
 ```bash
-composer require ralkage/flarum-account-lockout
+composer require ralkage/flarum-ext-account-lockout
 ```
 
 Then enable it in your Flarum admin panel under **Extensions**.
