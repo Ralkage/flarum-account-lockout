@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Badge from 'flarum/common/components/Badge';
 import User from 'flarum/common/models/User';
 import Model from 'flarum/common/Model';
+import UserControls from 'flarum/forum/utils/UserControls';
 
 import UnlockUserModal from './src/forum/components/UnlockUserModal';
 
@@ -15,7 +16,7 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
   User.prototype.canUnlock = Model.attribute('canUnlock');
 
   // Add unlock button to user moderation controls
-  extend('flarum/forum/utils/UserControls', 'moderationControls', (items, user) => {
+  extend(UserControls, 'moderationControls', (items, user) => {
     if (user.canUnlock() && user.isLocked()) {
       items.add(
         'unlock',

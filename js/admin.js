@@ -3,7 +3,7 @@ import app from 'flarum/admin/app';
 import User from 'flarum/common/models/User';
 import Model from 'flarum/common/Model';
 import Button from 'flarum/common/components/Button';
-import icon from 'flarum/common/helpers/icon';
+import Icon from 'flarum/common/components/Icon';
 import extractText from 'flarum/common/utils/extractText';
 
 app.initializers.add('ralkage/flarum-account-lockout', () => {
@@ -65,10 +65,10 @@ app.initializers.add('ralkage/flarum-account-lockout', () => {
         name: app.translator.trans('ralkage-account-lockout.admin.users.lock_status_column'),
         content: (user) => {
           if (user.isLocked()) {
-            return <span className="UserLockStatus UserLockStatus--locked" title={app.translator.trans('ralkage-account-lockout.admin.users.locked_tooltip')}>{icon('fas fa-lock')}</span>;
+            return <span className="UserLockStatus UserLockStatus--locked" title={app.translator.trans('ralkage-account-lockout.admin.users.locked_tooltip')}><Icon name="fas fa-lock" /></span>;
           }
 
-          return <span className="UserLockStatus UserLockStatus--unlocked">{icon('fas fa-lock-open')}</span>;
+          return <span className="UserLockStatus UserLockStatus--unlocked"><Icon name="fas fa-lock-open" /></span>;
         },
       },
       65

@@ -41,13 +41,13 @@ return [
                 ->get(fn (User $user) => (bool) $user->is_locked)
                 ->set(function (User $user, bool $value, Context $context) {
                     if (!$value) {
-                        $context->getActor()->assertCan('unlock', $user);
                         $user->is_locked = false;
                         $user->locked_until = null;
                         $user->locked_at = null;
                         $user->login_failed_count = 0;
                     }
                 })
+                ->writable(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user))
                 ->visible(fn (User $user, Context $context) => $context->getActor()->can('unlock', $user)),
             Schema\DateTime::make('lockedUntil')
                 ->get(fn (User $user) => $user->locked_until)
