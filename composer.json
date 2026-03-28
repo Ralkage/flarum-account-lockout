@@ -1,5 +1,5 @@
 {
-    "name": "ralkage/flarum-account-lockout",
+    "name": "ralkage/flarum-ext-account-lockout",
     "description": "Lock user accounts after too many failed login attempts.",
     "keywords": [
         "flarum",
